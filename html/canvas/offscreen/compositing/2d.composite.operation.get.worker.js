@@ -16,9 +16,12 @@ t.step(function() {
 var canvas = new OffscreenCanvas(100, 50);
 var ctx = canvas.getContext('2d');
 
-var modes = ['source-atop', 'source-in', 'source-out', 'source-over',
-    'destination-atop', 'destination-in', 'destination-out', 'destination-over',
-    'lighter', 'copy', 'xor'];
+var modes = ['clear', 'source-atop', 'source-in', 'source-out',
+    'source-over', 'destination-atop', 'destination-in', 'destination-out',
+    'destination-over', 'lighter', 'copy', 'xor', 'multiply', 'screen',
+    'overlay', 'darken', 'lighten', 'color-dodge', 'color-burn',
+    'hard-light', 'soft-light', 'difference', 'exclusion', 'hue',
+    'saturation', 'color', 'luminosity'];
 for (var i = 0; i < modes.length; ++i)
 {
     ctx.globalCompositeOperation = modes[i];
