@@ -38,7 +38,7 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
   - template: tools/ci/azure/affected_tests.yml
     parameters:
       artifactName: 'safari-preview-affected-tests'
@@ -55,7 +55,7 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
   - template: tools/ci/azure/affected_tests.yml
     parameters:
       checkoutCommit: 'HEAD^1'
@@ -76,7 +76,7 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
   - template: tools/ci/azure/checkout.yml
   - script: |
       set -eux -o pipefail
@@ -97,7 +97,7 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
   - template: tools/ci/azure/checkout.yml
   - template: tools/ci/azure/pip_install.yml
     parameters:
@@ -145,7 +145,7 @@ jobs:
       toxenv: py37
 
 - job: tools_unittest_mac_py310
-  displayName: 'tools/ unittests: macOS + Python 3.10'
+  displayName: 'tools/ unittests: macOS + Python 3.11'
   dependsOn: decision
   condition: dependencies.decision.outputs['test_jobs.tools_unittest']
   pool:
@@ -153,7 +153,7 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
   - template: tools/ci/azure/checkout.yml
   - template: tools/ci/azure/tox_pytest.yml
     parameters:
@@ -177,7 +177,7 @@ jobs:
       toxenv: py37
 
 - job: wptrunner_unittest_mac_py310
-  displayName: 'tools/wptrunner/ unittests: macOS + Python 3.10'
+  displayName: 'tools/wptrunner/ unittests: macOS + Python 3.11'
   dependsOn: decision
   condition: dependencies.decision.outputs['test_jobs.wptrunner_unittest']
   pool:
@@ -185,7 +185,7 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
   - template: tools/ci/azure/checkout.yml
   - template: tools/ci/azure/tox_pytest.yml
     parameters:
@@ -213,7 +213,7 @@ jobs:
       toxenv: py37
 
 - job: wpt_integration_mac_py310
-  displayName: 'tools/wpt/ tests: macOS + Python 3.10'
+  displayName: 'tools/wpt/ tests: macOS + Python 3.11'
   dependsOn: decision
   condition: dependencies.decision.outputs['test_jobs.wpt_integration']
   pool:
@@ -222,7 +222,7 @@ jobs:
   # full checkout required
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
   - template: tools/ci/azure/install_chrome.yml
   - template: tools/ci/azure/install_firefox.yml
   - template: tools/ci/azure/update_hosts.yml
@@ -252,7 +252,7 @@ jobs:
       toxenv: py37
 
 - job: tools_unittest_win_py310
-  displayName: 'tools/ unittests: Windows + Python 3.10'
+  displayName: 'tools/ unittests: Windows + Python 3.11'
   dependsOn: decision
   condition: dependencies.decision.outputs['test_jobs.tools_unittest']
   pool:
@@ -260,7 +260,7 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
       addToPath: false
   - template: tools/ci/azure/checkout.yml
   - template: tools/ci/azure/tox_pytest.yml
@@ -286,7 +286,7 @@ jobs:
       toxenv: py37
 
 - job: wptrunner_unittest_win_py310
-  displayName: 'tools/wptrunner/ unittests: Windows + Python 3.10'
+  displayName: 'tools/wptrunner/ unittests: Windows + Python 3.11'
   dependsOn: decision
   condition: dependencies.decision.outputs['test_jobs.wptrunner_unittest']
   pool:
@@ -294,7 +294,7 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
       addToPath: false
   - template: tools/ci/azure/checkout.yml
   - template: tools/ci/azure/tox_pytest.yml
@@ -325,7 +325,7 @@ jobs:
       toxenv: py37
 
 - job: wpt_integration_win_py310
-  displayName: 'tools/wpt/ tests: Windows + Python 3.10'
+  displayName: 'tools/wpt/ tests: Windows + Python 3.11'
   dependsOn: decision
   condition: dependencies.decision.outputs['test_jobs.wpt_integration']
   pool:
@@ -334,7 +334,7 @@ jobs:
   # full checkout required
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
   # currently just using the outdated Chrome/Firefox on the VM rather than
   # figuring out how to install Chrome Dev channel on Windows
   # - template: tools/ci/azure/install_chrome.yml
@@ -360,7 +360,7 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
   - template: tools/ci/azure/system_info.yml
   - template: tools/ci/azure/checkout.yml
   - template: tools/ci/azure/pip_install.yml
@@ -399,7 +399,7 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
   - template: tools/ci/azure/system_info.yml
   - template: tools/ci/azure/checkout.yml
   - template: tools/ci/azure/pip_install.yml
@@ -438,7 +438,7 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
   - template: tools/ci/azure/checkout.yml
   - template: tools/ci/azure/pip_install.yml
     parameters:
@@ -476,7 +476,7 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
   - template: tools/ci/azure/checkout.yml
   - template: tools/ci/azure/pip_install.yml
     parameters:
@@ -517,7 +517,7 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.10'
+      versionSpec: '3.11'
   - template: tools/ci/azure/checkout.yml
   - template: tools/ci/azure/pip_install.yml
     parameters:
