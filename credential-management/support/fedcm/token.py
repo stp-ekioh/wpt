@@ -22,5 +22,7 @@ def main(request, response):
     return (538, [], "Missing 'disclosure_text_shown' POST parameter")
 
   response.headers.set(b"Content-Type", b"application/json")
+  response.headers.set(b"Access-Control-Allow-Origin", request.headers.get(b"Origin"))
+  response.headers.set(b"Access-Control-Allow-Credentials", "true")
 
   return "{\"token\": \"token\"}"
