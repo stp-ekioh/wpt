@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<meta charset=utf-8 />
+<title>Event Timing: mouse triggered contextmenu.</title>
+<script src=/resources/testharness.js></script>
+<script src=/resources/testharnessreport.js></script>
+<script src=/resources/testdriver.js></script>
+<script src=/resources/testdriver-actions.js></script>
+<script src=/resources/testdriver-vendor.js></script>
+<script src=resources/event-timing-test-utils.js></script>
+<div id='target'>Right click me to bring up OS level contextmenu popup.</div>
+
+<script>
+  const set = new Set();
+
+  promise_test(async t => {
+    assert_implements(window.PerformanceEventTiming, 'Event Timing is not supported.');
+
+    const readyToResolve = () => { return set.has('contextmenu'); };
+    const observerPromise = createPerformanceObserverPromise(['event'], observeUntilTargetEvent(set, 'contextmenu'), readyToResolve);
+
+    await interactAndObserve('right-click', document.getElementById('target'), observerPromise);
+    assert_true(set.has('pointerdown'), 'Pointerdown should be reported.');
+    assert_true(set.has('mousedown'), 'Mousedown should be reported.');
+  }, "Event Timing: verify pointerdown reporting for mouse right click triggered contextmenu.");
+
+</script>
+
+</html>

@@ -12,7 +12,7 @@ async function clickOnElementAndDelay(id, delay, callback) {
   };
 
   element.addEventListener("pointerdown", clickHandler);
-  await test_driver.click(element);
+  await click(element);
 }
 
 function mainThreadBusy(duration) {
@@ -318,43 +318,56 @@ async function testEventType(t, eventType, looseCount=false) {
   await observerPromise;
 }
 
-function addListeners(element, events) {
-  const clickHandler = (e) => {
+function addListeners(target, events) {
+  const eventListener = (e) => {
     mainThreadBusy(200);
   };
-  events.forEach(e => { element.addEventListener(e, clickHandler); });
+  events.forEach(e => { target.addEventListener(e, eventListener); });
 }
 
 // The testdriver.js, testdriver-vendor.js and testdriver-actions.js need to be
 // included to use this function.
-async function tap(element) {
+async function tap(target) {
   return new test_driver.Actions()
     .addPointer("touchPointer", "touch")
-    .pointerMove(0, 0, { origin: element })
+    .pointerMove(0, 0, { origin: target })
     .pointerDown()
     .pointerUp()
     .send();
 }
 
-// The testdriver.js, testdriver-vendor.js need to be included to use this
-// function.
-async function pressKey(element, key) {
-  await test_driver.send_keys(element, key);
+async function click(target) {
+  return test_driver.click(target);
+}
+
+async function rightClick(target) {
+  const actions = new test_driver.Actions();
+  return actions.addPointer("mousePointer", "mouse")
+    .pointerMove(0, 0, { origin: target })
+    .pointerDown({ button: actions.ButtonType.RIGHT })
+    .pointerUp({ button: actions.ButtonType.RIGHT })
+    .send();
 }
 
 // The testdriver.js, testdriver-vendor.js need to be included to use this
 // function.
-async function addListenersAndPress(element, key, events) {
-  addListeners(element, events);
-  return pressKey(element, key);
+async function pressKey(target, key) {
+  await test_driver.send_keys(target, key);
 }
 
 // The testdriver.js, testdriver-vendor.js need to be included to use this
 // function.
-async function addListenersAndClick(element) {
-  addListeners(element,
+async function addListenersAndPress(target, key, events) {
+  addListeners(target, events);
+  return pressKey(target, key);
+}
+
+// The testdriver.js, testdriver-vendor.js need to be included to use this
+// function.
+async function addListenersAndClick(target) {
+  addListeners(target,
     ['mousedown', 'mouseup', 'pointerdown', 'pointerup', 'click']);
-  return test_driver.click(element);
+  return click(target);
 }
 
 function filterAndAddToMap(events, map) {
@@ -367,6 +380,17 @@ function filterAndAddToMap(events, map) {
   }
 }
 
+function observeUntilTargetEvent(observationSet, targetEvent) {
+  return (entryList) => {
+    for (const { name } of entryList.getEntries()) {
+      if (observationSet.has(targetEvent)) {
+        // ignore events come after target event
+        return;
+      }
+      observationSet.add(name);
+    }
+  }
+}
 async function createPerformanceObserverPromise(observeTypes, callback, readyToResolve
 ) {
   return new Promise(resolve => {
@@ -382,18 +406,24 @@ async function createPerformanceObserverPromise(observeTypes, callback, readyToR
 
 // The testdriver.js, testdriver-vendor.js need to be included to use this
 // function.
-async function interactAndObserve(interactionType, element, observerPromise) {
+async function interactAndObserve(interactionType, target, observerPromise) {
   let interactionPromise;
   switch (interactionType) {
     case 'tap': {
-      addListeners(element, ['pointerdown', 'pointerup']);
-      interactionPromise = tap(element);
+      addListeners(target, ['pointerdown', 'pointerup']);
+      interactionPromise = tap(target);
       break;
     }
     case 'click': {
-      addListeners(element,
+      addListeners(target,
         ['mousedown', 'mouseup', 'pointerdown', 'pointerup', 'click']);
-      interactionPromise = test_driver.click(element);
+      interactionPromise = click(target);
+      break;
+    }
+    case 'right-click': {
+      addListeners(target,
+        ['mousedown', 'pointerdown', 'contextmenu']);
+      interactionPromise = rightClick(target);
       break;
     }
   }
@@ -403,7 +433,7 @@ async function interactAndObserve(interactionType, element, observerPromise) {
 async function interact(interactionType, element, key = '') {
   switch (interactionType) {
     case 'click': {
-      return test_driver.click(element);
+      return click(element);
     }
     case 'tap': {
       return tap(element);
