@@ -189,6 +189,31 @@ promise_test(async t => {
 
 promise_test(async t => {
   const init = {
+    format: 'I420',
+    timestamp: 0,
+    codedWidth: 3,
+    codedHeight: 3,
+  };
+  const buf = new Uint8Array([
+    1, 2, 3, 4, 5, 6, 7, 8, 9,  // y
+    10, 11, 12, 13,             // u
+    14, 15, 16, 17,             // v
+  ]);
+  const expectedLayout = [
+    {offset: 0, stride: 3},
+    {offset: 9, stride: 2},
+    {offset: 13, stride: 2},
+  ];
+  const frame = new VideoFrame(buf, init);
+  assert_equals(frame.allocationSize(), buf.length, 'allocationSize()');
+  const data = new Uint8Array(buf.length);
+  const layout = await frame.copyTo(data);
+  assert_layout_equals(layout, expectedLayout);
+  assert_buffer_equals(data, buf);
+}, 'Test I420 with odd coded size.');
+
+promise_test(async t => {
+  const init = {
     format: 'NV12',
     timestamp: 0,
     codedWidth: 4,
@@ -277,16 +302,6 @@ promise_test(async t => {
   const data = new Uint8Array(12);
   await promise_rejects_js(t, TypeError, frame.copyTo(data, options));
 }, 'Test empty rect.');
-
-promise_test(async t => {
-  const frame = makeI420_4x2();
-  const options = {
-      rect: {x: 0, y: 0, width: 4, height: 1},
-  };
-  assert_throws_js(TypeError, () => frame.allocationSize(options));
-  const data = new Uint8Array(12);
-  await promise_rejects_js(t, TypeError, frame.copyTo(data, options));
-}, 'Test unaligned rect.');
 
 promise_test(async t => {
   const frame = makeI420_4x2();

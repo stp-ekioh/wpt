@@ -400,16 +400,8 @@ test(t => {
       'invalid coded height');
   assert_throws_js(
       TypeError,
-      () => constructFrame({timestamp: 1234, codedWidth: 4, codedHeight: 1}),
-      'odd coded height');
-  assert_throws_js(
-      TypeError,
       () => constructFrame({timestamp: 1234, codedWidth: 0, codedHeight: 4}),
       'invalid coded width');
-  assert_throws_js(
-      TypeError,
-      () => constructFrame({timestamp: 1234, codedWidth: 3, codedHeight: 2}),
-      'odd coded width');
   assert_throws_js(
       TypeError, () => constructFrame({
                    timestamp: 1234,
@@ -681,6 +673,29 @@ test(t => {
   assert_equals(frame.visibleRect.height, 1, 'visibleRect.height');
   frame.close();
 }, 'Test I420 VideoFrame with odd visible size');
+
+test(t => {
+  let fmt = 'I420';
+  let vfInit = {
+    format: fmt,
+    timestamp: 1234,
+    codedWidth: 3,
+    codedHeight: 3,
+    visibleRect: {x: 0, y: 0, width: 3, height: 3},
+  };
+  let data = new Uint8Array([
+    1, 2, 3, 4, 5, 6, 7, 8, 9,  // y
+    1, 2, 3, 4,                 // u
+    1, 2, 3, 4,                 // v
+  ]);
+  let frame = new VideoFrame(data, vfInit);
+  assert_equals(frame.format, fmt, 'format');
+  assert_equals(frame.visibleRect.x, 0, 'visibleRect.x');
+  assert_equals(frame.visibleRect.y, 0, 'visibleRect.y');
+  assert_equals(frame.visibleRect.width, 3, 'visibleRect.width');
+  assert_equals(frame.visibleRect.height, 3, 'visibleRect.height');
+  frame.close();
+}, 'Test I420 VideoFrame with odd coded size');
 
 test(t => {
   let fmt = 'I420A';
