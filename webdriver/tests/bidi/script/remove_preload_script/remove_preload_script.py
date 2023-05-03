@@ -18,7 +18,7 @@ async def test_remove_preload_script(bidi_session, type_hint):
         target=ContextTarget(new_context["context"]),
         await_promise=True,
     )
-    assert result == {"type": "string", "value": "bar"}
+    assert result == {"type": "undefined"}
 
     await bidi_session.script.remove_preload_script(script=script)
 
