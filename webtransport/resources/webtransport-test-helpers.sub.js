@@ -110,3 +110,23 @@ async function readInto(reader, buffer) {
 
   return buffer;
 }
+
+// Opens a new WebTransport connection.
+async function openWebTransport(remoteContextHelper) {
+  const url = webtransport_url('custom-response.py?:status=200');
+  await remoteContextHelper.executeScript((url) => {
+    const testWebTransport = new WebTransport(url);
+    return testWebTransport.ready;
+  }, [url]);
+}
+
+// Opens a new WebTransport connection and then close it.
+async function openThenCloseWebTransport(remoteContextHelper) {
+  const url = webtransport_url('custom-response.py?:status=200');
+  await remoteContextHelper.executeScript((url) => {
+    const testWebTransport = new WebTransport(url);
+    return testWebTransport.ready.then(() => {
+      testWebTransport.close();
+    });
+  }, [url]);
+}
